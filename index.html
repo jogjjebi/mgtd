@@ -36,13 +36,37 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: black; display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 9999;
+            padding: 20px; /* 화면 끝에 붙지 않도록 전체 패딩 추가 */
         }
 
-        /* [Fix] 로딩 텍스트 중앙 정렬 및 여백 확보 */
+        /* [Fix] 로딩 텍스트 반응형 및 중앙 정렬 강화 */
         .loader-text {
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
             text-align: center;
             width: 100%;
-            padding: 0 20px;
+            max-width: 300px; /* 텍스트가 너무 퍼지지 않도록 제한 */
+            line-height: 1.5;
+            word-break: keep-all; /* 단어 단위로 줄바꿈 */
+        }
+
+        /* [Fix] 진행바 반응형 처리 */
+        .progress-bar {
+            width: 100%;
+            max-width: 300px;
+            height: 3px;
+            background: #222;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-inner {
+            width: 0%;
+            height: 100%;
+            background: var(--accent-blue);
+            transition: width 0.1s;
         }
 
         #login-screen {
@@ -168,27 +192,35 @@
 
         /* --- 반응형 (모바일) 스타일 --- */
         @media (max-width: 768px) {
-            header { height: 140px; } /* [Fix] 헤더 높이 증가 */
+            /* [Fix] 헤더 레이아웃 재설정: 패딩으로 내부 공간 확보 */
+            header { 
+                height: auto;
+                min-height: 140px;
+                padding-top: 60px; /* 버튼과의 겹침 방지를 위해 상단 패딩 추가 */
+                padding-bottom: 20px;
+                justify-content: flex-start; /* 상단부터 정렬 */
+            }
+            
             .terminal-title { font-size: 1.2rem !important; }
             
-            /* [Fix] Menu 버튼과의 겹침 방지: 상단 여백 대폭 추가 */
+            /* [Fix] 마진 제거 (헤더 패딩으로 대체) */
             .clearance-alert { 
                 font-size: 0.9rem !important; 
                 letter-spacing: 2px !important; 
                 margin-bottom: 5px !important; 
                 text-align: center;
-                margin-top: 55px !important; /* [Fix] 텍스트를 버튼 아래로 내림 */
+                margin-top: 0 !important; 
             }
             
             #back-button { top: 20px; right: 20px; left: auto; }
             
             #menu-btn { 
                 display: flex; 
-                top: 15px; /* [Fix] 메뉴 버튼 위치 미세 조정 */
-                left: 15px; 
+                top: 20px;
+                left: 20px; 
             }
             
-            .wrapper { height: calc(100vh - 140px); } /* [Fix] 헤더 높이에 맞춰 조정 */
+            .wrapper { height: calc(100vh - 140px); }
             
             nav {
                 position: fixed; top: 0; left: 0; height: 100%;
@@ -230,9 +262,10 @@
 <body onload="initSystem()">
 
 <div id="initial-loading-screen">
-    <div class="loader-text" style="color: var(--accent-blue); font-size: 1.1rem; margin-bottom: 20px; letter-spacing: 2px;">ROK-S.E.R.C DATABASE ACCESSING...</div>
-    <div class="progress-bar" style="width: 300px; height: 3px; background: #222; position: relative; overflow: hidden;">
-        <div class="progress-inner" id="progress" style="width: 0%; height: 100%; background: var(--accent-blue); transition: width 0.1s;"></div>
+    <!-- [Fix] 인라인 스타일 제거 및 클래스 적용 -->
+    <div class="loader-text">ROK-S.E.R.C DATABASE ACCESSING...</div>
+    <div class="progress-bar">
+        <div class="progress-inner" id="progress"></div>
     </div>
 </div>
 

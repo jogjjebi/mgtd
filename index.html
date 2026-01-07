@@ -76,6 +76,7 @@
             background: rgba(22, 27, 34, 0.95); backdrop-filter: blur(10px);
             position: relative; z-index: 500;
             flex-shrink: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         /* --- 메뉴 & 뒤로가기 버튼 --- */
@@ -89,12 +90,14 @@
         #back-button:hover { background: var(--accent-red); color: white; }
 
         #menu-btn {
-            display: none; position: absolute; top: 30px; left: 20px;
+            display: none; position: absolute; top: 20px; left: 20px;
             background: transparent; border: none; color: var(--accent-red);
             cursor: pointer; z-index: 600;
             font-family: inherit; font-weight: bold; font-size: 0.8rem;
             align-items: center; gap: 6px;
+            padding: 10px;
         }
+        #menu-btn:active { transform: scale(0.95); }
 
         /* --- 레이아웃 --- */
         .wrapper { display: none; height: calc(100vh - 150px - 40px); position: relative; }
@@ -155,20 +158,35 @@
         @media (max-width: 768px) {
             header { height: 120px; }
             .terminal-title { font-size: 1.2rem !important; }
-            .clearance-alert { font-size: 0.9rem !important; letter-spacing: 2px !important; margin-bottom: 5px !important; text-align: center; }
+            
+            /* [Fix] Menu 버튼과의 겹침 방지: 상단 여백 추가 */
+            .clearance-alert { 
+                font-size: 0.9rem !important; 
+                letter-spacing: 2px !important; 
+                margin-bottom: 5px !important; 
+                text-align: center;
+                margin-top: 35px; /* 메뉴 버튼과 겹치지 않도록 여백 추가 */
+            }
             
             #back-button { top: 20px; right: 20px; left: auto; }
-            #menu-btn { display: flex; top: 20px; left: 20px; }
+            #menu-btn { display: flex; }
             
             .wrapper { height: calc(100vh - 120px); }
             
             nav {
-                position: fixed; top: 0; left: -300px; height: 100%;
-                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+                position: fixed; top: 0; left: -280px; height: 100%;
+                border-right: 1px solid var(--border-color);
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 transform: translateX(0);
+                /* [Fix] 닫혀있을 때 그림자 제거하여 삐져나옴 방지 */
+                box-shadow: none; 
             }
-            nav.active { transform: translateX(300px); }
+            
+            nav.active { 
+                transform: translateX(280px); 
+                /* [Fix] 열려있을 때만 그림자 적용 */
+                box-shadow: 10px 0 30px rgba(0,0,0,0.5); 
+            }
             
             main { padding: 25px 20px; }
             .dashboard-grid { grid-template-columns: 1fr; }
@@ -219,7 +237,7 @@
 <header id="main-header">
     <button id="menu-btn" onclick="toggleMenu()">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        MENU
+        <span style="font-size: 0.7rem; font-weight: bold; letter-spacing: 1px;">MENU</span>
     </button>
 
     <button id="back-button" onclick="goBack()">
@@ -236,37 +254,41 @@
     <div id="mobile-overlay" onclick="toggleMenu()"></div>
     
     <nav>
-        <div class="nav-group">
-            <span class="nav-label">WORLD STATUS</span>
-            <div class="nav-item" onclick="loadContent('korea')">KOREA</div>
-            <div class="nav-item" onclick="loadContent('denied')">JAPAN</div>
-            <div class="nav-item" onclick="loadContent('denied')">CHINA</div>
-            <div class="nav-item" onclick="loadContent('denied')">USA</div>
-            <div class="nav-item" onclick="loadContent('denied')">RUSSIA</div>
-        </div>
-        <div class="nav-group">
-            <span class="nav-label">THE EVENT</span>
-            <div class="nav-item" onclick="loadContent('pbht')">P.B.H.T</div>
-            <div class="nav-item" onclick="loadContent('area51')">11.14 51 AREA</div>
-            <div class="nav-item" onclick="loadContent('denied')">[REDACTED] i23ncxo3</div>
-        </div>
-        <div class="nav-group">
-            <span class="nav-label">EXTERNAL PHENOMENON</span>
-            <div class="nav-item" onclick="loadContent('phenomenon')">PHENOMENON REPORT</div>
-            <div class="nav-item" onclick="loadContent('entity')">ENTITY CLASSIFICATION</div>
-            <div class="nav-item" onclick="loadContent('asset_glitch')">ASSET: GLITCH</div>
-            <div class="nav-item" onclick="loadContent('denied')">ASSET: LUNA</div>
-            <div class="nav-item" onclick="loadContent('denied')">ASSET: CLOVER</div>
-            <div class="nav-item" onclick="loadContent('denied')">ASSET: ATENA</div>
-            <div class="nav-item" onclick="loadContent('denied')">ASSET: AQUA</div>
-        </div>
-        <div class="nav-group">
-            <span class="nav-label">AGREEMENT</span>
-            <div class="nav-item" onclick="loadContent('vargs')">VAGRS PROTOCOL</div>
-        </div>
-        <div class="nav-group">
-            <span class="nav-label">MILITARY FORCE</span>
-            <div class="nav-item" onclick="loadContent('serc')">ROK-S.E.R.C</div>
+        <!-- Nav Content populated via JS script below -->
+        <div class="nav-content-container">
+            <!-- Dynamic Nav Items will be inserted here if needed, or hardcoded -->
+            <div class="nav-group">
+                <span class="nav-label">WORLD STATUS</span>
+                <div class="nav-item" onclick="loadContent('korea')">KOREA</div>
+                <div class="nav-item" onclick="loadContent('denied')">JAPAN</div>
+                <div class="nav-item" onclick="loadContent('denied')">CHINA</div>
+                <div class="nav-item" onclick="loadContent('denied')">USA</div>
+                <div class="nav-item" onclick="loadContent('denied')">RUSSIA</div>
+            </div>
+            <div class="nav-group">
+                <span class="nav-label">THE EVENT</span>
+                <div class="nav-item" onclick="loadContent('pbht')">P.B.H.T</div>
+                <div class="nav-item" onclick="loadContent('area51')">11.14 51 AREA</div>
+                <div class="nav-item" onclick="loadContent('denied')">[REDACTED] i23ncxo3</div>
+            </div>
+            <div class="nav-group">
+                <span class="nav-label">EXTERNAL PHENOMENON</span>
+                <div class="nav-item" onclick="loadContent('phenomenon')">PHENOMENON REPORT</div>
+                <div class="nav-item" onclick="loadContent('entity')">ENTITY CLASSIFICATION</div>
+                <div class="nav-item" onclick="loadContent('asset_glitch')">ASSET: GLITCH</div>
+                <div class="nav-item" onclick="loadContent('denied')">ASSET: LUNA</div>
+                <div class="nav-item" onclick="loadContent('denied')">ASSET: CLOVER</div>
+                <div class="nav-item" onclick="loadContent('denied')">ASSET: ATENA</div>
+                <div class="nav-item" onclick="loadContent('denied')">ASSET: AQUA</div>
+            </div>
+            <div class="nav-group">
+                <span class="nav-label">AGREEMENT</span>
+                <div class="nav-item" onclick="loadContent('vargs')">VAGRS PROTOCOL</div>
+            </div>
+            <div class="nav-group">
+                <span class="nav-label">MILITARY FORCE</span>
+                <div class="nav-item" onclick="loadContent('serc')">ROK-S.E.R.C</div>
+            </div>
         </div>
     </nav>
 

@@ -199,16 +199,16 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
-  }
-}
-</script>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+      }
+    }
+    </script>
 </head>
 <body onload="initSystem()">
 
@@ -254,40 +254,38 @@
     <div id="mobile-overlay" onclick="toggleMenu()"></div>
     
     <nav>
-        <!-- Nav Content populated via JS script below -->
         <div class="nav-content-container">
-            <!-- Dynamic Nav Items will be inserted here if needed, or hardcoded -->
             <div class="nav-group">
                 <span class="nav-label">WORLD STATUS</span>
-                <div class="nav-item" onclick="loadContent('korea')">KOREA</div>
-                <div class="nav-item" onclick="loadContent('denied')">JAPAN</div>
-                <div class="nav-item" onclick="loadContent('denied')">CHINA</div>
-                <div class="nav-item" onclick="loadContent('denied')">USA</div>
-                <div class="nav-item" onclick="loadContent('denied')">RUSSIA</div>
+                <div class="nav-item" data-id="korea" onclick="loadContent('korea')">KOREA</div>
+                <div class="nav-item" data-id="japan" onclick="loadContent('japan')">JAPAN</div>
+                <div class="nav-item" data-id="china" onclick="loadContent('china')">CHINA</div>
+                <div class="nav-item" data-id="usa" onclick="loadContent('usa')">USA</div>
+                <div class="nav-item" data-id="russia" onclick="loadContent('russia')">RUSSIA</div>
             </div>
             <div class="nav-group">
                 <span class="nav-label">THE EVENT</span>
-                <div class="nav-item" onclick="loadContent('pbht')">P.B.H.T</div>
-                <div class="nav-item" onclick="loadContent('area51')">11.14 51 AREA</div>
-                <div class="nav-item" onclick="loadContent('denied')">[REDACTED] i23ncxo3</div>
+                <div class="nav-item" data-id="pbht" onclick="loadContent('pbht')">P.B.H.T</div>
+                <div class="nav-item" data-id="area51" onclick="loadContent('area51')">11.14 51 AREA</div>
+                <div class="nav-item" data-id="redacted" onclick="loadContent('redacted')">[REDACTED] i23ncxo3</div>
             </div>
             <div class="nav-group">
                 <span class="nav-label">EXTERNAL PHENOMENON</span>
-                <div class="nav-item" onclick="loadContent('phenomenon')">PHENOMENON REPORT</div>
-                <div class="nav-item" onclick="loadContent('entity')">ENTITY CLASSIFICATION</div>
-                <div class="nav-item" onclick="loadContent('asset_glitch')">ASSET: GLITCH</div>
-                <div class="nav-item" onclick="loadContent('denied')">ASSET: LUNA</div>
-                <div class="nav-item" onclick="loadContent('denied')">ASSET: CLOVER</div>
-                <div class="nav-item" onclick="loadContent('denied')">ASSET: ATENA</div>
-                <div class="nav-item" onclick="loadContent('denied')">ASSET: AQUA</div>
+                <div class="nav-item" data-id="phenomenon" onclick="loadContent('phenomenon')">PHENOMENON REPORT</div>
+                <div class="nav-item" data-id="entity" onclick="loadContent('entity')">ENTITY CLASSIFICATION</div>
+                <div class="nav-item" data-id="asset_glitch" onclick="loadContent('asset_glitch')">ASSET: GLITCH</div>
+                <div class="nav-item" data-id="asset_luna" onclick="loadContent('asset_luna')">ASSET: LUNA</div>
+                <div class="nav-item" data-id="asset_clover" onclick="loadContent('asset_clover')">ASSET: CLOVER</div>
+                <div class="nav-item" data-id="asset_atena" onclick="loadContent('asset_atena')">ASSET: ATENA</div>
+                <div class="nav-item" data-id="asset_aqua" onclick="loadContent('asset_aqua')">ASSET: AQUA</div>
             </div>
             <div class="nav-group">
                 <span class="nav-label">AGREEMENT</span>
-                <div class="nav-item" onclick="loadContent('vargs')">VAGRS PROTOCOL</div>
+                <div class="nav-item" data-id="vargs" onclick="loadContent('vargs')">VAGRS PROTOCOL</div>
             </div>
             <div class="nav-group">
                 <span class="nav-label">MILITARY FORCE</span>
-                <div class="nav-item" onclick="loadContent('serc')">ROK-S.E.R.C</div>
+                <div class="nav-item" data-id="serc" onclick="loadContent('serc')">ROK-S.E.R.C</div>
             </div>
         </div>
     </nav>
@@ -742,12 +740,13 @@
         document.getElementById('back-button').style.display = (historyStack.length > 0) ? 'flex' : 'none'; 
     }
 
+    // Updated Active State Logic: Uses data-id attribute for exact matching
     function updateMenuActiveState(id) {
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
-            const itemText = item.innerText.toLowerCase().replace(/[\s\:\.\-\(\)]/g, '');
-            const searchKey = id.toLowerCase().replace(/asset_|jsdf|spla|arc|_/g, '');
-            if(itemText.includes(searchKey)) item.classList.add('active');
+            if(item.dataset.id === id) {
+                item.classList.add('active');
+            }
         });
     }
 
@@ -758,4 +757,3 @@
 
 </body>
 </html>
-

@@ -282,6 +282,7 @@
     </button>
     
     <div class="clearance-alert">SYSTEM ACCESS GRANTED <br class="md:hidden" /> - CLEARANCE LEVEL 5</div>
+    <!-- This title will be replaced by JS upon login -->
     <div class="terminal-title">INTERNAL TERMINAL</div>
     <div id="clock" class="system-clock">00:00:00</div>
 </header>
@@ -558,7 +559,7 @@
                     <p>20대 중반 추정, 약 170추정, 초상 능력 사용시 검은 장갑 착용으로 구분.</p>
 
                     <span class="report-label">[ 법적·계약적 지위 ]</span>
-                    <p>비엔나 초상 능력 운용 및 국제 안보 공조 협정 (Vienna Agreement on Gifted Resource Status) 제3조에 의거한 비상근 외부 전략 자산(독립 계약체). 현재 대한위상방위국과 3년 단위의 초상 개체 자율방범활동 계약 체결 중임.</p>
+                    <p>비엔나 초상 능력 운용 및 국제 안보 공조 협정 (Vienna Agreement on Gifted Resource Status) 제3조에 의거한 비상근 외부 전략 자산(독립 계약체). 현재 대한위상방위국과 5년 단위의 초상 개체 활동 계약 체결 중임.</p>
 
                     <span class="report-label">[ 능력 특성 분석 ]</span>
                     <ul>
@@ -645,7 +646,7 @@
                 <h2>STRATEGIC ANALYSIS: ROK-S.E.R.C</h2>
 
                 <div style="text-align: center; margin-bottom: 30px;">
-                            <img src="https://pub-a5f0279ea37346c09393ffa285811404.r2.dev/S.png" 
+                            <img src="https://pub-a5f0279ea37346c09393ffa285811404.r2.dev/L.png" 
                                  alt="ROK-S.E.R.C" 
                                  style="max-width: 100%; height: auto; border: 1px solid var(--border-color); opacity: 0.8;">
                         </div>
@@ -745,6 +746,12 @@
         const idInput = document.getElementById('user-id').value;
         const errorMsg = document.getElementById('login-error');
         if (idInput.trim() !== "") {
+            // [Fix] Update the header title with the classified ID
+            const titleElement = document.querySelector('.terminal-title');
+            if(titleElement) {
+                titleElement.innerText = `[CLASSIFIED:${idInput.trim().toUpperCase()}]`;
+            }
+
             errorMsg.style.color = "var(--accent-blue)";
             errorMsg.innerText = "[ ACCESS_GRANTED. WELCOME. ]";
             errorMsg.style.opacity = "1";
@@ -845,5 +852,3 @@
 
 </body>
 </html>
-
-
